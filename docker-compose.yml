@@ -1,0 +1,49 @@
+version: "3.9"
+
+services:
+  mysqldb:
+    container_name: mysqldb
+    image: mysql:8.0.34
+    networks:
+      - test-network
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-dev-password
+      MYSQL_DATABASE: docker_example
+      MYSQL_HOST: mysqldb
+    expose:
+      - "3306"
+    ports:
+      - "3308:3306"
+
+  spring-boot-docker:
+    container_name: spring-boot-docker
+    build: .
+    restart: always
+    environment:
+      - spring.datasource.url=jdbc:mysql://mysqldb:3306/docker_example?allowPublicKeyRetrieval=true
+    ports:
+      - "8080:8080"
+    networks:
+      - test-network
+    depends_on:
+      - mysqldb
+
+  react-docker:
+    container_name: react-docker
+    image: todos
+    restart: always
+    environment:
+      - SERVER_HOST=http://spring-boot-docker:8080
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    networks:
+      - test-network
+    links:
+      - spring-boot-docker
+
+networks:
+  test-network:
+    name: test-network
