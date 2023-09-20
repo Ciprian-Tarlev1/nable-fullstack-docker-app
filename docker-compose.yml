@@ -4,8 +4,6 @@ services:
   mysqldb:
     container_name: mysqldb
     image: mysql:8.0.34
-    networks:
-      - test-network
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: my-dev-password
@@ -15,35 +13,35 @@ services:
       - "3306"
     ports:
       - "3308:3306"
+    networks:
+      - nable-network
 
-  spring-boot-docker:
-    container_name: spring-boot-docker
-    build: .
+  backend:
+    container_name: backend
+    build: ./backend
     restart: always
     environment:
       - spring.datasource.url=jdbc:mysql://mysqldb:3306/docker_example?allowPublicKeyRetrieval=true
     ports:
       - "8080:8080"
     networks:
-      - test-network
+      - nable-network
     depends_on:
       - mysqldb
 
-  react-docker:
-    container_name: react-docker
-    image: todos
+  frontend:
+    container_name: frontend
+    build: ./frontend
     restart: always
     environment:
-      - SERVER_HOST=http://spring-boot-docker:8080
-    expose:
-      - "3000"
+      - SERVER_HOST=http://backend:8080
     ports:
       - "3000:3000"
     networks:
-      - test-network
+      - nable-network
     links:
-      - spring-boot-docker
+      - backend
 
 networks:
-  test-network:
-    name: test-network
+  nable-network:
+    name: nable-network

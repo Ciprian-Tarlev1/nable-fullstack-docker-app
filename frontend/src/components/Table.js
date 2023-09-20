@@ -56,18 +56,6 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
   },
 }));
 
-const rows = [
-  { id: 1, title: 'Snow', description: 'Jon', completed: true },
-  { id: 2, title: 'Lannister', description: 'Cersei', completed: false },
-  { id: 3, title: 'Lannister', description: 'Jaime', completed: true },
-  { id: 4, title: 'Stark', description: 'Arya', completed: false },
-  { id: 5, title: 'Targaryen', description: 'Daenerys', completed: true },
-  { id: 6, title: 'Melisandre', description: null, completed: false },
-  { id: 7, title: 'Clifford', description: 'Ferrara', completed: true },
-  { id: 8, title: 'Frances', description: 'Rossini', completed: false },
-  { id: 9, title: 'Roxie', description: 'Harvey', completed: true },
-];
-
 const completedStatuses = [
   {
     value: true,
@@ -84,11 +72,10 @@ export default function Table() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [open, setOpen] = useState(false);
   const [todo, setTodo] = useState({ "completed": false, "description": "", "id": 0, "title": "" });
-  const [isModified, setIsModified] = useState(false);
 
   useEffect(() => {
     fetchTodos();
-  }, [isModified]);
+  }, []);
 
   const fetchTodos = () => {
     getTodos()
@@ -102,8 +89,15 @@ export default function Table() {
   }
 
   const onDeleteTodo = (id) => {
-    deleteTodo(id);
-    setIsModified(!isModified)
+    deleteTodo(id)
+    .then((response) => {
+      console.log(response);
+      fetchTodos();
+    })
+    .catch((error) => {
+      console.log(error);
+      alert(error);
+    })
   }
 
   const onChangeValue = (value) => {
@@ -151,12 +145,23 @@ export default function Table() {
     setOpen(true);
   };
 
+  const handleSave = (todo) => {
+    addTodo(todo)
+    .then((response) => {
+      console.log(response);
+      fetchTodos();
+    })
+    .catch((error) => {
+      console.log(error);
+      alert(error);
+    })
+  }
+
   const handleClose = (event) => {
     if(event?.target?.textContent !== "Cancel") {
       if (todo?.title && todo?.description && todo?.completed !== undefined && todo.id !== undefined) {
-        addTodo(todo);
+        handleSave(todo);
         setTodo({ "completed": false, "description": "", "id": 0, "title": "" });
-        setIsModified(!isModified)
       }
       setOpen(false);
     } else {
