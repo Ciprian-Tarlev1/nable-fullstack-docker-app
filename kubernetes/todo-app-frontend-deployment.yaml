@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-frontend
+  namespace: todo-app
+  labels:
+    app: todo-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todo-frontend
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: todo-frontend
+        tier: frontend
+    spec:
+      containers:
+        - name: todo-frontend-container
+          image: cipriantarlev91/nable-fullstack-docker-app-frontend:1.0.0
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "1000Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000
+          env:
+            - name: SERVER_HOST
+              value: http://backend-service:8080
