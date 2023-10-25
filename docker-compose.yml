@@ -1,6 +1,30 @@
 version: "3.9"
 
 services:
+  backend:
+      container_name: backend
+      build: ./backend
+      restart: always
+      environment:
+        - spring.datasource.url=jdbc:mysql://mysqldb:3306/docker_example?allowPublicKeyRetrieval=true
+      ports:
+        - "8080:8080"
+      networks:
+        - nable-network
+      depends_on:
+        - mysqldb
+  
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - nable-network
+    links:
+      - backend
+
   mysqldb:
     container_name: mysqldb
     image: mysql:8.0.34
@@ -15,32 +39,6 @@ services:
       - "3308:3306"
     networks:
       - nable-network
-
-  backend:
-    container_name: backend
-    build: ./backend
-    restart: always
-    environment:
-      - spring.datasource.url=jdbc:mysql://mysqldb:3306/docker_example?allowPublicKeyRetrieval=true
-    ports:
-      - "8080:8080"
-    networks:
-      - nable-network
-    depends_on:
-      - mysqldb
-
-  frontend:
-    container_name: frontend
-    build: ./frontend
-    restart: always
-    environment:
-      - SERVER_HOST=http://backend:8080
-    ports:
-      - "3000:3000"
-    networks:
-      - nable-network
-    links:
-      - backend
 
 networks:
   nable-network:

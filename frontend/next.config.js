@@ -17,6 +17,16 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return {
+      fallback: [
+        {
+          source: '/:path*',
+          destination: `http://backend-service/:path*`
+        }
+      ]
+    }
+  },
 };
 
 module.exports = nextConfig;
