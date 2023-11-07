@@ -20,6 +20,26 @@ spec:
     spec:
       containers:
         - name: todo-frontend-container
-          image: cipriantarlev91/nable-fullstack-docker-app-frontend-kubernetes:lastest
+          image: cipriantarlev91/nable-fullstack-docker-app-frontend:latest
           ports:
             - containerPort: 3000
+      # Just an example how to add env variables and read files from configMap      
+      #     volumeMounts:
+      #     - mountPath: /app/.env.local
+      #       name: env-local
+      #       readOnly: true
+      #       subPath: .env.local
+      #     env:
+      #       - name: NEXT_PUBLIC_SERVER_HOST
+      #         valueFrom:
+      #           configMapKeyRef:
+      #             name: env-local
+      #             key: NEXT_PUBLIC_SERVER_HOST
+      # volumes:
+      #   - configMap:
+      #       defaultMode: 420
+      #       items:
+      #       - key: .env
+      #         path: .env.local
+      #       name: env-local
+      #     name: env-local

@@ -1,0 +1,26 @@
+# Just an example how an Ingress configuration file looks like. You need a host to use it.
+# For local testing or demo, you can use LoadBalancer service instead of Ingress.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: todo-ingress
+  namespace: todo-app
+spec:
+  rules:
+    - host: myapp.example.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: frontend-service
+                port:
+                  number: 3000
+            path: /
+            pathType: Prefix
+          - backend:
+              service:
+                name: backend-service
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix

@@ -1,0 +1,11 @@
+# This will be keept just as an example how to create files and env variables in configMap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-local
+  namespace: todo-app
+data:
+  .env: |-
+    NEXT_PUBLIC_SERVER_HOST=http://backend-service:8080
+  NEXT_PUBLIC_SERVER_HOST: http://backend-service:8080
