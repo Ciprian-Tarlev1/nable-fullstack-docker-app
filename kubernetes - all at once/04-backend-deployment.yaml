@@ -1,0 +1,41 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-backend
+  namespace: todo-app
+  labels:
+    app: todo-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo-backend
+      tier: backend
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: todo-backend
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: todo-backend-container
+          image: cipriantarlev91/nable-fullstack-docker-app-backend:latest
+          resources:
+            requests:
+              memory: "500Mi"
+              cpu: "250m"
+            limits:
+              memory: "1000Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: spring.datasource.url
+              value: jdbc:mysql://mysql-service:3306/docker_example?allowPublicKeyRetrieval=true
+            - name: spring.datasource.username
+              value: root
+            - name: spring.datasource.password
+              value: my-dev-password
