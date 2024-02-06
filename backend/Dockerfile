@@ -17,17 +17,12 @@ RUN java -Djarmode=layertools -jar how-to-docker-0.0.1-SNAPSHOT.jar extract
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# Folders from extractor image
-# 40 MB for dependencies
 COPY  --from=extractor /project/dependencies/. /app/.
 
-# 252 kB for spring boot loader
 COPY  --from=extractor /project/spring-boot-loader/. /app/.
 
-# 0 B no snapshot versioned dependencies
 COPY  --from=extractor /project/snapshot-dependencies/. /app/.
 
-# 4.7 kB LayerdemoApplication.class
 COPY  --from=extractor /project/application/. /app/.
 
 EXPOSE 8080
