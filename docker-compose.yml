@@ -4,7 +4,7 @@ services:
   backend:
       container_name: backend
       build: ./backend
-      restart: always
+      restart: on-failure
       environment:
         - spring.datasource.url=jdbc:mysql://mysqldb:3306/docker_example?allowPublicKeyRetrieval=true
       ports:
@@ -17,7 +17,7 @@ services:
   frontend:
     container_name: frontend
     build: ./frontend
-    restart: always
+    restart: on-failure
     ports:
       - "3000:3000"
     networks:
@@ -28,14 +28,16 @@ services:
   mysqldb:
     container_name: mysqldb
     image: mysql:8.0.34
-    restart: always
+    restart: on-failure
     environment:
       MYSQL_ROOT_PASSWORD: my-dev-password
       MYSQL_DATABASE: docker_example
       MYSQL_HOST: mysqldb
     expose:
+    # This exposes port 3306 in the container to other services in the same network.
       - "3306"
     ports:
+    # This publishes the container's port 3306 to the host machine.
       - "3308:3306"
     networks:
       - nable-network
